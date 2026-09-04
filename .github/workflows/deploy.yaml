@@ -64,7 +64,7 @@ jobs:
             --allow-unauthenticated \
             --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}",ADMIN_USERNAME="${{ secrets.ADMIN_USERNAME }}",ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}" \
             --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
-            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+            --cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
 
   deploy-loan:
     needs: detect-changes
@@ -93,7 +93,7 @@ jobs:
             --allow-unauthenticated \
             --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}" \
             --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
-            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+            --cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
 
   deploy-manager:
     needs: detect-changes
@@ -123,7 +123,7 @@ jobs:
             --allow-unauthenticated \
             --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}",ADMIN_USERNAME="${{ secrets.ADMIN_USERNAME }}",ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}" \
             --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
-            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+            --cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
 
   deploy-transaction:
     needs: detect-changes
@@ -153,4 +153,4 @@ jobs:
             --allow-unauthenticated \
             --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}" \
             --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
-            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+            --cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
