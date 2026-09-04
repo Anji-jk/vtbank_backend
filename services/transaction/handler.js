@@ -3,7 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import serverless from 'serverless-http';
 import transactionRoutes from './transaction.routes.js';
-import { errorMiddleware } from '../../shared/middleware/error.middleware.js';
+import { errorMiddleware } from './shared/middleware/error.middleware.js';
 
 export const app = express();
 app.use(express.json());

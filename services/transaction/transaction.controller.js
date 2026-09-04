@@ -1,7 +1,7 @@
-import { success } from "../../shared/utils/apiResponse.util.js";
-import AppError from "../../shared/utils/appError.util.js";
+import { success } from "./shared/utils/apiResponse.util.js";
+import AppError from "./shared/utils/appError.util.js";
 import * as transactionService from './transaction.service.js'
-import { generateStatementPDF } from '../../shared/utils/pdfStatement.util.js';
+import { generateStatementPDF } from './shared/utils/pdfStatement.util.js';
 
 
 export const getAccountTransactionByFilters = async (req, res, next) => {

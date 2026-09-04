@@ -1,4 +1,4 @@
-import multer from 'multer';
+
 import AppError from '../utils/appError.util.js';
 import { fail } from '../utils/apiResponse.util.js';
 
@@ -23,16 +23,6 @@ export const errorMiddleware = (err, req, res, next) => {
     return fail(res, 'Unauthorized', 401);
   }
 
-//   if (err instanceof multer.MulterError) {
-//     if (err.code === 'LIMIT_FILE_SIZE') {
-//       return fail(res, 'KYC file must be 100KB or smaller', 400);
-//     }
-//     return fail(res, err.message, 400);
-//   }
-
-//   if (err.message?.includes('Only PDF and image files')) {
-//     return fail(res, err.message, 400);
-//   }
 
   if (err.name === 'SequelizeUniqueConstraintError') {
     const field = err.errors?.[0]?.path || 'field';

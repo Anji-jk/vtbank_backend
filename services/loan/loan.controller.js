@@ -1,5 +1,5 @@
-import { success } from "../../shared/utils/apiResponse.util.js";
-import AppError from "../../shared/utils/appError.util.js";
+import { success } from "./shared/utils/apiResponse.util.js";
+import AppError from "./shared/utils/appError.util.js";
 import * as loanService from './loan.service.js';
 
 // ─── Account-level ─────────────────────────────────────────────

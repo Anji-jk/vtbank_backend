@@ -1,8 +1,8 @@
 import {Router} from 'express';
 import * as ManagerController from './manager.controller.js';
-import { authMiddleware } from '../../shared/middleware/auth.middleware.js';
-import { requireRole } from '../../shared/middleware/role.middleware.js';
-import { validate } from '../../shared/middleware/validate.middleware.js';
+import { authMiddleware } from './shared/middleware/auth.middleware.js';
+import { requireRole } from './shared/middleware/role.middleware.js';
+import { validate } from './shared/middleware/validate.middleware.js';
 
 import { createAccountSchema } from './account.validator.js';
 

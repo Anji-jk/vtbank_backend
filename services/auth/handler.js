@@ -4,7 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import serverless from 'serverless-http';
 import authRoutes from './auth.routes.js';
-import { errorMiddleware } from '../../shared/middleware/error.middleware.js';
+import { errorMiddleware } from './shared/middleware/error.middleware.js';
 
 export const app = express();          // <- exported for local-dev.js and for tests
 app.use(express.json());

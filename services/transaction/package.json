@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
+        "predev": "node -e \"const fs=require('fs'); const src='../../shared'; const dst='./shared'; if (fs.existsSync(dst)) fs.rmSync(dst,{recursive:true,force:true}); fs.cpSync(src,dst,{recursive:true,filter:(srcPath)=>!srcPath.includes('node_modules')});\"",
         "dev": "nodemon local-dev.js",
+        "predeploy": "node -e \"const fs=require('fs'); const src='../../shared'; const dst='./shared'; if (fs.existsSync(dst)) fs.rmSync(dst,{recursive:true,force:true}); fs.cpSync(src,dst,{recursive:true,filter:(srcPath)=>!srcPath.includes('node_modules')});\"",
         "deploy": "gcloud functions deploy transaction-fn --runtime=nodejs20 --trigger-http --entry-point=handler --service-account training-project-419308@appspot.gserviceaccount.com --allow-unauthenticated --gen2 --region asia-south1 --set-env-vars ENV=development"
     },
     "dependencies": {

@@ -1,10 +1,10 @@
 import { Op } from 'sequelize'
-import db from '../../shared/db/models/index.js';
-import AppError from '../../shared/utils/appError.util.js';
-import { comparePassword } from '../../shared/utils/password.util.js';
-import { signAccessToken } from '../../shared/utils/jwt.util.js';
-import { sendRegistrationReceivedEmail } from '../../shared/mail/mail.service.js'
-import { generateCustomerCode } from '../../shared/utils/customerCode.util.js';
+import db from './shared/db/models/index.js';
+import AppError from './shared/utils/appError.util.js';
+import { comparePassword } from './shared/utils/password.util.js';
+import { signAccessToken } from './shared/utils/jwt.util.js';
+import { sendRegistrationReceivedEmail } from './shared/mail/mail.service.js'
+import { generateCustomerCode } from './shared/utils/customerCode.util.js';
 
 export const registerCustomer = async (registrationData, kycFilePath = null) => {
   // check existing customer with same mail or phone

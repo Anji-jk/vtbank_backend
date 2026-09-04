@@ -1,8 +1,8 @@
 import * as authService from './auth.service.js';
-import { success } from '../../shared/utils/apiResponse.util.js';
-import { authCookieName, cookieOptions } from '../../shared/config/jwt.config.js';
-import AppError from '../../shared/utils/appError.util.js';
-import db from '../../shared/db/models/index.js'
+import { success } from './shared/utils/apiResponse.util.js';
+import { authCookieName, cookieOptions } from './shared/config/jwt.config.js';
+import AppError from './shared/utils/appError.util.js';
+import db from './shared/db/models/index.js'
 
 
 export const register = async (req, res, next) => {

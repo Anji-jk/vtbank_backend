@@ -1,9 +1,9 @@
-import db from '../../shared/db/models/index.js';
+import db from './shared/db/models/index.js';
 import { Op } from "sequelize";
-import AppError from '../../shared/utils/appError.util.js';
-import { generateRandomPassword, hashPassword } from '../../shared/utils/password.util.js';
-import { generateAccountNumber } from '../../shared/utils/accountNumber.util.js';
-import { sendRegistrationApprovedEmail, sendAccountCreatedEmail, sendRegistrationRejectedEmail } from '../../shared/mail/mail.service.js';
+import AppError from './shared/utils/appError.util.js';
+import { generateRandomPassword, hashPassword } from './shared/utils/password.util.js';
+import { generateAccountNumber } from './shared/utils/accountNumber.util.js';
+import { sendRegistrationApprovedEmail, sendAccountCreatedEmail, sendRegistrationRejectedEmail } from './shared/mail/mail.service.js';
 
 
 

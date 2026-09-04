@@ -20,7 +20,7 @@ export const initCustomerIdSequence = (sequelize) => {
     {
       sequelize,
       modelName: 'CustomerIdSequence',
-      tableName: 'customer_id_sequences',
+      tableName: 'Customer_id_sequences',
       freezeTableName: true,
       underscored: true,
       timestamps: false,

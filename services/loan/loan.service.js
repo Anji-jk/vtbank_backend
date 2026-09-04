@@ -1,7 +1,7 @@
-import db from '../../shared/db/models/index.js';
-import AppError from '../../shared/utils/appError.util.js';
-import { calculateEmiDetails, generateAmortizationSchedule } from '../../shared/utils/loanCalculation.util.js';
-import { generateReferenceNumber, generateTransactionId } from '../../shared/utils/transaction.util.js';
+import db from './shared/db/models/index.js';
+import AppError from './shared/utils/appError.util.js';
+import { calculateEmiDetails, generateAmortizationSchedule } from './shared/utils/loanCalculation.util.js';
+import { generateReferenceNumber, generateTransactionId } from './shared/utils/transaction.util.js';
 import crypto from 'crypto';
 
 // ─── Account-level queries ─────────────────────────────────────

@@ -1,8 +1,8 @@
 import { Op } from "sequelize";
-import AppError from '../../shared/utils/appError.util.js';
-import db from '../../shared/db/models/index.js';
-import { resolveDateRange } from '../../shared/utils/dateFilter.util.js';
-import { generateReferenceNumber, generateTransactionId, chooseAccountModel } from "../../shared/utils/transaction.util.js";
+import AppError from './shared/utils/appError.util.js';
+import db from './shared/db/models/index.js';
+import { resolveDateRange } from './shared/utils/dateFilter.util.js';
+import { generateReferenceNumber, generateTransactionId, chooseAccountModel } from "./shared/utils/transaction.util.js";
 
 export const getSingleAccountTransactions = async (accountNumber, { page,
     limit,
