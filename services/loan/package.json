@@ -1,0 +1,22 @@
+{
+    "name": "vtbank-loan-fn",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "nodemon local-dev.js",
+        "deploy": "gcloud functions deploy loan-fn --runtime=nodejs20 --trigger-http --entry-point=handler --service-account training-project-419308@appspot.gserviceaccount.com --allow-unauthenticated --gen2 --region asia-south1 --set-env-vars ENV=development"
+    },
+    "dependencies": {
+        "express": "^5.2.1",
+        "serverless-http": "^3.2.0",
+        "cors": "^2.8.6",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^17.4.2",
+        "sequelize": "^6.37.8",
+        "mysql2": "^3.23.3",
+        "jsonwebtoken": "^9.0.3"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.14"
+    }
+}

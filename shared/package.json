@@ -1,0 +1,26 @@
+{
+    "name": "vtbank-shared",
+    "type": "module",
+    "private": true,
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.6",
+        "crypto": "^1.0.1",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "generate-password": "^1.7.1",
+        "joi": "^18.2.3",
+        "jsonwebtoken": "^9.0.3",
+        "multer": "^2.2.0",
+        "mysql2": "^3.23.3",
+        "nodemailer": "^9.0.5",
+        "pdfkit": "^0.19.1",
+        "sequelize": "^6.37.8"
+    },
+    "devDependencies": {
+        "@faker-js/faker": "^10.6.0",
+        "nodemon": "^3.1.14",
+        "sequelize-cli": "^6.6.5"
+    }
+}
