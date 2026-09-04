@@ -2,11 +2,12 @@
   "name": "vtbank-auth-fn",
   "version": "1.0.0",
   "type": "module",
+  "main": "handler.js",
   "scripts": {
-    "predev": "node -e \"const fs=require('fs'); const src='../../shared'; const dst='./shared'; if (fs.existsSync(dst)) fs.rmSync(dst,{recursive:true,force:true}); fs.cpSync(src,dst,{recursive:true,filter:(srcPath)=>!srcPath.includes('node_modules')});\"",
+    "predev": "node -e \"import('fs').then(fs => { const src='../../shared', dst='./shared'; if (fs.existsSync(dst)) fs.rmSync(dst,{recursive:true,force:true}); fs.cpSync(src,dst,{recursive:true,filter:(p)=>!p.includes('node_modules')}); });\"",
     "dev": "nodemon local-dev.js",
-    "predeploy": "node -e \"const fs=require('fs'); const src='../../shared'; const dst='./shared'; if (fs.existsSync(dst)) fs.rmSync(dst,{recursive:true,force:true}); fs.cpSync(src,dst,{recursive:true,filter:(srcPath)=>!srcPath.includes('node_modules')});\"",
-    "deploy": "gcloud functions deploy auth-fn --runtime=nodejs20 --trigger-http --entry-point=handler --service-account training-project-419308@appspot.gserviceaccount.com --allow-unauthenticated --gen2 --region asia-south1 --set-env-vars ENV=development"
+    "predeploy": "node -e \"import('fs').then(fs => { const src='../../shared', dst='./shared'; if (fs.existsSync(dst)) fs.rmSync(dst,{recursive:true,force:true}); fs.cpSync(src,dst,{recursive:true,filter:(p)=>!p.includes('node_modules')}); });\"",
+    "deploy": "gcloud functions deploy auth-fn --runtime=nodejs22 --trigger-http --entry-point=handler --service-account training-project-419308@appspot.gserviceaccount.com --allow-unauthenticated --gen2 --region asia-south1 --set-env-vars ENV=development"
   },
   "dependencies": {
     "express": "^5.2.1",
@@ -22,5 +23,7 @@
     "joi": "^18.2.3",
     "nodemailer": "^9.0.5"
   },
-  "devDependencies": { "nodemon": "^3.1.14" }
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }
