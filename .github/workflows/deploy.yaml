@@ -63,8 +63,13 @@ jobs:
             --region=asia-south1 \
             --allow-unauthenticated \
             --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}",ADMIN_USERNAME="${{ secrets.ADMIN_USERNAME }}",ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}" \
-            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
-            --cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest
+      - name: Attach Cloud SQL instance
+        run: |
+          gcloud run services update auth-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --region=asia-south1 \
+            --add-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
 
   deploy-loan:
     needs: detect-changes
@@ -92,8 +97,13 @@ jobs:
             --region=asia-south1 \
             --allow-unauthenticated \
             --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}" \
-            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
-            --cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest
+      - name: Attach Cloud SQL instance
+        run: |
+          gcloud run services update loan-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --region=asia-south1 \
+            --add-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
 
   deploy-manager:
     needs: detect-changes
@@ -122,8 +132,13 @@ jobs:
             --memory=512MB \
             --allow-unauthenticated \
             --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}",ADMIN_USERNAME="${{ secrets.ADMIN_USERNAME }}",ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}" \
-            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
-            --cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest
+      - name: Attach Cloud SQL instance
+        run: |
+          gcloud run services update manager-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --region=asia-south1 \
+            --add-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
 
   deploy-transaction:
     needs: detect-changes
@@ -152,5 +167,10 @@ jobs:
             --memory=512MB \
             --allow-unauthenticated \
             --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}" \
-            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
-            --cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest
+      - name: Attach Cloud SQL instance
+        run: |
+          gcloud run services update transaction-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --region=asia-south1 \
+            --add-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
