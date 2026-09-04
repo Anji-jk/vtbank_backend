@@ -1,0 +1,24 @@
+
+# Never upload dependencies
+node_modules/
+
+# Never upload local secrets
+.env
+.env.*
+!.env.example
+
+# Local-only entrypoint — not the deployed handler, don't ship it
+local-dev.js
+
+# Git internals — irrelevant to the function, just extra bytes
+.git/
+.gitignore
+.gcloudignore
+
+# OS/editor noise
+.DS_Store
+*.log
+
+# Tests — not needed at runtime
+*.test.js
+__tests__/
