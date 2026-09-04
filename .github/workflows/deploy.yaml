@@ -3,6 +3,7 @@ name: Deploy Backend Services
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -39,7 +40,7 @@ jobs:
 
   deploy-auth:
     needs: detect-changes
-    if: needs.detect-changes.outputs.auth == 'true'
+    if: needs.detect-changes.outputs.auth == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -73,7 +74,7 @@ jobs:
 
   deploy-loan:
     needs: detect-changes
-    if: needs.detect-changes.outputs.loan == 'true'
+    if: needs.detect-changes.outputs.loan == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -107,7 +108,7 @@ jobs:
 
   deploy-manager:
     needs: detect-changes
-    if: needs.detect-changes.outputs.manager == 'true'
+    if: needs.detect-changes.outputs.manager == 'true' || github.event_name == 'workflow_dispatch' 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -142,7 +143,7 @@ jobs:
 
   deploy-transaction:
     needs: detect-changes
-    if: needs.detect-changes.outputs.transaction == 'true'
+    if: needs.detect-changes.outputs.transaction == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
