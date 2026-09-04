@@ -6,7 +6,7 @@ on:
 
 permissions:
   contents: read
-  id-token: writename: Deploy Backend Services
+  id-token: write
 
 on:
   push:
