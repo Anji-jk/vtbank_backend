@@ -1,0 +1,311 @@
+name: Deploy Backend Services
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: writename: Deploy Backend Services
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      auth: ${{ steps.filter.outputs.auth }}
+      loan: ${{ steps.filter.outputs.loan }}
+      manager: ${{ steps.filter.outputs.manager }}
+      transaction: ${{ steps.filter.outputs.transaction }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            shared: &shared
+              - 'shared/**'
+            auth:
+              - 'services/auth/**'
+              - *shared
+            loan:
+              - 'services/loan/**'
+              - *shared
+            manager:
+              - 'services/manager/**'
+              - *shared
+            transaction:
+              - 'services/transaction/**'
+              - *shared
+
+  deploy-auth:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.auth == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Copy shared code
+        run: cp -r shared services/auth/shared
+      - name: Deploy auth-fn
+        run: |
+          cd services/auth
+          gcloud functions deploy auth-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=handler \
+            --gen2 \
+            --region=asia-south1 \
+            --allow-unauthenticated \
+            --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}",ADMIN_USERNAME="${{ secrets.ADMIN_USERNAME }}",ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}" \
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
+            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+
+  deploy-loan:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.loan == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Copy shared code
+        run: cp -r shared services/loan/shared
+      - name: Deploy loan-fn
+        run: |
+          cd services/loan
+          gcloud functions deploy loan-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=handler \
+            --gen2 \
+            --region=asia-south1 \
+            --allow-unauthenticated \
+            --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}" \
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
+            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+
+  deploy-manager:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.manager == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Copy shared code
+        run: cp -r shared services/manager/shared
+      - name: Deploy manager-fn
+        run: |
+          cd services/manager
+          gcloud functions deploy manager-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=handler \
+            --gen2 \
+            --region=asia-south1 \
+            --memory=512MB \
+            --allow-unauthenticated \
+            --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}",ADMIN_USERNAME="${{ secrets.ADMIN_USERNAME }}",ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}" \
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
+            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+
+  deploy-transaction:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.transaction == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Copy shared code
+        run: cp -r shared services/transaction/shared
+      - name: Deploy transaction-fn
+        run: |
+          cd services/transaction
+          gcloud functions deploy transaction-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=handler \
+            --gen2 \
+            --region=asia-south1 \
+            --memory=512MB \
+            --allow-unauthenticated \
+            --set-env-vars=ENV=production,FRONTEND_URL="${{ secrets.FRONTEND_URL }}",DB_HOST="/cloudsql/${{ secrets.GCP_SQL_CONNECTION }}",DB_PORT=3306,DB_NAME="${{ secrets.DB_NAME }}",DB_USER="${{ secrets.DB_USER }}",SMTP_HOST="${{ secrets.SMTP_HOST }}",SMTP_PORT="${{ secrets.SMTP_PORT }}",SMTP_USER="${{ secrets.SMTP_USER }}",EMAIL_FROM="${{ secrets.EMAIL_FROM }}" \
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
+            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      auth: ${{ steps.filter.outputs.auth }}
+      loan: ${{ steps.filter.outputs.loan }}
+      manager: ${{ steps.filter.outputs.manager }}
+      transaction: ${{ steps.filter.outputs.transaction }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            shared: &shared
+              - 'shared/**'
+            auth:
+              - 'services/auth/**'
+              - *shared
+            loan:
+              - 'services/loan/**'
+              - *shared
+            manager:
+              - 'services/manager/**'
+              - *shared
+            transaction:
+              - 'services/transaction/**'
+              - *shared
+
+  deploy-auth:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.auth == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Copy shared code
+        run: cp -r shared services/auth/shared
+      - name: Deploy auth-fn
+        run: |
+          cd services/auth
+          gcloud functions deploy auth-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=handler \
+            --gen2 \
+            --region=asia-south1 \
+            --allow-unauthenticated \
+            --set-env-vars=ENV=production,FRONTEND_URL=${{ secrets.FRONTEND_URL }},DB_HOST=/cloudsql/${{ secrets.GCP_SQL_CONNECTION }},DB_PORT=3306,DB_NAME=${{ secrets.DB_NAME }},DB_USER=${{ secrets.DB_USER }},SMTP_HOST=${{ secrets.SMTP_HOST }},SMTP_PORT=${{ secrets.SMTP_PORT }},SMTP_USER=${{ secrets.SMTP_USER }},EMAIL_FROM=${{ secrets.EMAIL_FROM }},ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }},ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }} \
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
+            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+
+  deploy-loan:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.loan == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Copy shared code
+        run: cp -r shared services/loan/shared
+      - name: Deploy loan-fn
+        run: |
+          cd services/loan
+          gcloud functions deploy loan-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=handler \
+            --gen2 \
+            --region=asia-south1 \
+            --allow-unauthenticated \
+            --set-env-vars=ENV=production,FRONTEND_URL=${{ secrets.FRONTEND_URL }},DB_HOST=/cloudsql/${{ secrets.GCP_SQL_CONNECTION }},DB_PORT=3306,DB_NAME=${{ secrets.DB_NAME }},DB_USER=${{ secrets.DB_USER }},SMTP_HOST=${{ secrets.SMTP_HOST }},SMTP_PORT=${{ secrets.SMTP_PORT }},SMTP_USER=${{ secrets.SMTP_USER }},EMAIL_FROM=${{ secrets.EMAIL_FROM }} \
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
+            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+
+  deploy-manager:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.manager == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Copy shared code
+        run: cp -r shared services/manager/shared
+      - name: Deploy manager-fn
+        run: |
+          cd services/manager
+          gcloud functions deploy manager-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=handler \
+            --gen2 \
+            --region=asia-south1 \
+            --memory=512MB \
+            --allow-unauthenticated \
+            --set-env-vars=ENV=production,FRONTEND_URL=${{ secrets.FRONTEND_URL }},DB_HOST=/cloudsql/${{ secrets.GCP_SQL_CONNECTION }},DB_PORT=3306,DB_NAME=${{ secrets.DB_NAME }},DB_USER=${{ secrets.DB_USER }},SMTP_HOST=${{ secrets.SMTP_HOST }},SMTP_PORT=${{ secrets.SMTP_PORT }},SMTP_USER=${{ secrets.SMTP_USER }},EMAIL_FROM=${{ secrets.EMAIL_FROM }},ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }},ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }} \
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
+            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
+
+  deploy-transaction:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.transaction == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Copy shared code
+        run: cp -r shared services/transaction/shared
+      - name: Deploy transaction-fn
+        run: |
+          cd services/transaction
+          gcloud functions deploy transaction-fn \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=handler \
+            --gen2 \
+            --region=asia-south1 \
+            --memory=512MB \
+            --allow-unauthenticated \
+            --set-env-vars=ENV=production,FRONTEND_URL=${{ secrets.FRONTEND_URL }},DB_HOST=/cloudsql/${{ secrets.GCP_SQL_CONNECTION }},DB_PORT=3306,DB_NAME=${{ secrets.DB_NAME }},DB_USER=${{ secrets.DB_USER }},SMTP_HOST=${{ secrets.SMTP_HOST }},SMTP_PORT=${{ secrets.SMTP_PORT }},SMTP_USER=${{ secrets.SMTP_USER }},EMAIL_FROM=${{ secrets.EMAIL_FROM }} \
+            --set-secrets=DB_PASSWORD=db-password:latest,JWT_SECRET=jwt-secret:latest,SMTP_PASS=smtp-pass:latest \
+            --set-cloudsql-instances=${{ secrets.GCP_SQL_CONNECTION }}
