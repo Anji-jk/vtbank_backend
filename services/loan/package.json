@@ -7,7 +7,7 @@
     "predev": "node -e \"import('fs').then(fs => { const src='../../shared', dst='./shared'; if (fs.existsSync(dst)) fs.rmSync(dst,{recursive:true,force:true}); fs.cpSync(src,dst,{recursive:true,filter:(p)=>!p.includes('node_modules')}); });\"",
     "dev": "nodemon local-dev.js",
     "predeploy": "node -e \"import('fs').then(fs => { const src='../../shared', dst='./shared'; if (fs.existsSync(dst)) fs.rmSync(dst,{recursive:true,force:true}); fs.cpSync(src,dst,{recursive:true,filter:(p)=>!p.includes('node_modules')}); });\"",
-    "deploy": "gcloud functions deploy loan-fn --runtime=nodejs22 --trigger-http --entry-point=handler --service-account=992823915753-compute@developer.gserviceaccount.com --allow-unauthenticated --gen2 --region asia-south1 --set-env-vars ENV=development"
+    "deploy": "gcloud functions deploy loan-fn --runtime=nodejs22 --trigger-http --entry-point=handler --service-account=github-actions-deployer@vtbank-development.iam.gserviceaccount.com --allow-unauthenticated --gen2 --region asia-south1 --set-env-vars ENV=development"
   },
   "dependencies": {
     "express": "^5.2.1",

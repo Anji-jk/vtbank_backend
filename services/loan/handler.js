@@ -8,7 +8,7 @@ export const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
-app.use('/', loanRoutes);
+app.use('/api/loan', loanRoutes);
 app.use(errorMiddleware);
 
 export const handler = app;
